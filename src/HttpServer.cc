@@ -58,6 +58,13 @@ private:
     std::map<std::string, CacheEntry> responseCache;  // pageName -> cached response
     double predictionThreshold;  // Minimum probability for pre-caching (60%)
     
+    // Cache management variables
+    std::map<std::string, cMessage*> cacheExpiryMessages;  // pageName -> expiry message
+    int maxCacheSize;  // Maximum number of cached entries
+    int currentCacheSize;  // Current number of cached entries
+    double cacheCleanupInterval;  // Periodic cleanup interval in seconds
+    cMessage* cacheCleanupTimer;  // Timer for periodic cleanup
+    
     // Random number generation for processing delay
     std::mt19937 rng;
     std::uniform_real_distribution<double> delayDistribution;
@@ -71,6 +78,9 @@ private:
     simsignal_t cacheHitSignal;
     simsignal_t cacheMissSignal;
     simsignal_t cachePreGeneratedSignal;
+    simsignal_t cacheExpiredSignal;
+    simsignal_t cacheEvictedSignal;
+    simsignal_t cacheSizeSignal;
 
 protected:
     virtual void initialize() override;
@@ -93,6 +103,14 @@ protected:
     // Predictive caching methods
     virtual bool checkResponseCache(const std::string& page, std::string& cachedResponse);
     virtual void predictivePreCache(const std::string& currentPage);
+    
+    // Cache management methods
+    virtual void scheduleCacheExpiry(const std::string& pageName, double ttlSeconds);
+    virtual void handleCacheExpiry(const std::string& pageName);
+    virtual void cleanupExpiredCache();
+    virtual void evictLeastRecentlyUsed();
+    virtual void updateCacheSize();
+    virtual bool addToCacheWithManagement(const std::string& pageName, const CacheEntry& entry);
 };
 
 Define_Module(HttpServer);
@@ -111,6 +129,13 @@ void HttpServer::initialize()
     cacheHitDelayDistribution = std::uniform_real_distribution<double>(0.01, 0.02); // 10-20ms
     predictionThreshold = 0.6; // 60%
     
+    // Initialize cache management
+    maxCacheSize = 20;  // Maximum 20 cached pages
+    currentCacheSize = 0;
+    cacheCleanupInterval = 10.0;  // Cleanup every 10 seconds
+    cacheCleanupTimer = new cMessage("CacheCleanup");
+    scheduleAt(simTime() + cacheCleanupInterval, cacheCleanupTimer);
+    
     // Initialize web pages
     initializeWebPages();
     
@@ -122,6 +147,9 @@ void HttpServer::initialize()
     cacheHitSignal = registerSignal("cacheHit");
     cacheMissSignal = registerSignal("cacheMiss");
     cachePreGeneratedSignal = registerSignal("cachePreGenerated");
+    cacheExpiredSignal = registerSignal("cacheExpired");
+    cacheEvictedSignal = registerSignal("cacheEvicted");
+    cacheSizeSignal = registerSignal("cacheSize");
     
     EV << "HttpServer initialized with " << webPages.size() << " web pages" << endl;
     EV << "Pages available: ";
@@ -134,7 +162,7 @@ void HttpServer::initialize()
 void HttpServer::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
-        // Check if this is a cached response or delayed processing
+        // Check message type for different self-messages
         if (strcmp(msg->getName(), "CachedResponse") == 0) {
             // Handle cached response
             int requestId = msg->par("requestId");
@@ -172,6 +200,16 @@ void HttpServer::handleMessage(cMessage *msg)
             EV << "Sent cached response for page '" << currentPageName 
                << "' to client " << clientId << endl;
                
+            delete msg;
+        } else if (strcmp(msg->getName(), "CacheCleanup") == 0) {
+            // Periodic cache cleanup
+            cleanupExpiredCache();
+            // Reschedule next cleanup
+            scheduleAt(simTime() + cacheCleanupInterval, cacheCleanupTimer);
+        } else if (strncmp(msg->getName(), "CacheExpiry_", 12) == 0) {
+            // Individual cache entry expiry
+            std::string pageName = msg->getName() + 12;  // Extract page name after "CacheExpiry_"
+            handleCacheExpiry(pageName);
             delete msg;
         } else {
             // This is a delayed processing message
@@ -423,6 +461,24 @@ void HttpServer::finish()
     
     // Print pattern learning statistics
     printPatternStatistics();
+    
+    // Clean up cache management
+    if (cacheCleanupTimer && cacheCleanupTimer->isScheduled()) {
+        cancelAndDelete(cacheCleanupTimer);
+    }
+    
+    // Cancel all pending cache expiry messages
+    for (auto& pair : cacheExpiryMessages) {
+        if (pair.second && pair.second->isScheduled()) {
+            cancelAndDelete(pair.second);
+        }
+    }
+    cacheExpiryMessages.clear();
+    
+    // Record cache statistics
+    recordScalar("maxCacheSize", maxCacheSize);
+    recordScalar("finalCacheSize", currentCacheSize);
+    recordScalar("cacheUtilization", currentCacheSize > 0 ? (double)currentCacheSize / maxCacheSize : 0.0);
 }
 
 // Pattern learning method implementations
@@ -554,7 +610,19 @@ bool HttpServer::checkResponseCache(const std::string& page, std::string& cached
             return true;
         } else {
             // Cache expired, remove entry
+            EV << "Cache entry for page '" << page << "' expired during lookup" << endl;
+            
+            // Cancel expiry message if it exists
+            auto expiryIt = cacheExpiryMessages.find(page);
+            if (expiryIt != cacheExpiryMessages.end()) {
+                cancelAndDelete(expiryIt->second);
+                cacheExpiryMessages.erase(expiryIt);
+            }
+            
             responseCache.erase(cacheIt);
+            currentCacheSize--;
+            emit(cacheExpiredSignal, 1);
+            emit(cacheSizeSignal, currentCacheSize);
         }
     }
     return false;
@@ -591,14 +659,146 @@ void HttpServer::predictivePreCache(const std::string& currentPage)
                     // We'll use -1 as resourceId since we're indexing by page name
                     CacheEntry cacheEntry(-1, responseContent, 5);
                     cacheEntry.setTimestamp(simTime());
-                    responseCache[toPage] = cacheEntry;
                     
-                    EV << "Pre-cached response for page '" << toPage 
-                       << "' (probability: " << std::fixed << std::setprecision(3) 
-                       << probability << ")" << endl;
-                    emit(cachePreGeneratedSignal, 1);
+                    // Use cache management system to add entry
+                    if (addToCacheWithManagement(toPage, cacheEntry)) {
+                        EV << "Pre-cached response for page '" << toPage 
+                           << "' (probability: " << std::fixed << std::setprecision(3) 
+                           << probability << ")" << endl;
+                        emit(cachePreGeneratedSignal, 1);
+                        
+                        // Schedule expiry for this cache entry
+                        scheduleCacheExpiry(toPage, 5.0);
+                    } else {
+                        EV << "Failed to cache page '" << toPage << "' - cache full" << endl;
+                    }
                 }
             }
         }
     }
+}
+
+void HttpServer::scheduleCacheExpiry(const std::string& pageName, double ttlSeconds)
+{
+    // Cancel existing expiry message if any
+    auto expiryIt = cacheExpiryMessages.find(pageName);
+    if (expiryIt != cacheExpiryMessages.end()) {
+        cancelAndDelete(expiryIt->second);
+        cacheExpiryMessages.erase(expiryIt);
+    }
+    
+    // Schedule new expiry message
+    std::string msgName = "CacheExpiry_" + pageName;
+    cMessage* expiryMsg = new cMessage(msgName.c_str());
+    cacheExpiryMessages[pageName] = expiryMsg;
+    scheduleAt(simTime() + ttlSeconds, expiryMsg);
+    
+    EV << "Scheduled cache expiry for page '" << pageName << "' in " << ttlSeconds << "s" << endl;
+}
+
+void HttpServer::handleCacheExpiry(const std::string& pageName)
+{
+    auto cacheIt = responseCache.find(pageName);
+    if (cacheIt != responseCache.end()) {
+        EV << "Cache entry for page '" << pageName << "' expired and removed" << endl;
+        responseCache.erase(cacheIt);
+        currentCacheSize--;
+        emit(cacheExpiredSignal, 1);
+        emit(cacheSizeSignal, currentCacheSize);
+    }
+    
+    // Remove expiry message reference
+    auto expiryIt = cacheExpiryMessages.find(pageName);
+    if (expiryIt != cacheExpiryMessages.end()) {
+        cacheExpiryMessages.erase(expiryIt);
+    }
+}
+
+void HttpServer::cleanupExpiredCache()
+{
+    int expiredCount = 0;
+    auto cacheIt = responseCache.begin();
+    
+    while (cacheIt != responseCache.end()) {
+        if (cacheIt->second.isExpired()) {
+            EV << "Cleaning up expired cache entry for page '" << cacheIt->first << "'" << endl;
+            
+            // Cancel and remove expiry message if it exists
+            auto expiryIt = cacheExpiryMessages.find(cacheIt->first);
+            if (expiryIt != cacheExpiryMessages.end()) {
+                cancelAndDelete(expiryIt->second);
+                cacheExpiryMessages.erase(expiryIt);
+            }
+            
+            cacheIt = responseCache.erase(cacheIt);
+            currentCacheSize--;
+            expiredCount++;
+        } else {
+            ++cacheIt;
+        }
+    }
+    
+    if (expiredCount > 0) {
+        EV << "Cleaned up " << expiredCount << " expired cache entries" << endl;
+        emit(cacheExpiredSignal, expiredCount);
+        emit(cacheSizeSignal, currentCacheSize);
+    }
+}
+
+void HttpServer::evictLeastRecentlyUsed()
+{
+    if (responseCache.empty()) return;
+    
+    // Find the least recently used cache entry
+    auto lruIt = responseCache.begin();
+    simtime_t oldestAccess = lruIt->second.getLastAccess();
+    
+    for (auto it = responseCache.begin(); it != responseCache.end(); ++it) {
+        if (it->second.getLastAccess() < oldestAccess) {
+            oldestAccess = it->second.getLastAccess();
+            lruIt = it;
+        }
+    }
+    
+    EV << "Evicting LRU cache entry for page '" << lruIt->first << "'" << endl;
+    
+    // Cancel and remove expiry message if it exists
+    auto expiryIt = cacheExpiryMessages.find(lruIt->first);
+    if (expiryIt != cacheExpiryMessages.end()) {
+        cancelAndDelete(expiryIt->second);
+        cacheExpiryMessages.erase(expiryIt);
+    }
+    
+    responseCache.erase(lruIt);
+    currentCacheSize--;
+    emit(cacheEvictedSignal, 1);
+    emit(cacheSizeSignal, currentCacheSize);
+}
+
+void HttpServer::updateCacheSize()
+{
+    currentCacheSize = responseCache.size();
+    emit(cacheSizeSignal, currentCacheSize);
+}
+
+bool HttpServer::addToCacheWithManagement(const std::string& pageName, const CacheEntry& entry)
+{
+    // Check if cache is full
+    if (currentCacheSize >= maxCacheSize) {
+        // First try to clean up expired entries
+        cleanupExpiredCache();
+        
+        // If still full, evict LRU entry
+        if (currentCacheSize >= maxCacheSize) {
+            evictLeastRecentlyUsed();
+        }
+    }
+    
+    // Add to cache
+    responseCache[pageName] = entry;
+    currentCacheSize++;
+    emit(cacheSizeSignal, currentCacheSize);
+    
+    EV << "Added page '" << pageName << "' to cache (size: " << currentCacheSize << "/" << maxCacheSize << ")" << endl;
+    return true;
 }

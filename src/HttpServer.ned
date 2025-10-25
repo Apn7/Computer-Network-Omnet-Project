@@ -18,6 +18,9 @@ simple HttpServer
         @signal[cacheHit](type="long");
         @signal[cacheMiss](type="long");
         @signal[cachePreGenerated](type="long");
+        @signal[cacheExpired](type="long");
+        @signal[cacheEvicted](type="long");
+        @signal[cacheSize](type="long");
         
         @statistic[requestsReceived](title="Requests Received"; source=requestReceived; record=count,vector);
         @statistic[responsesGenerated](title="Responses Generated"; source=responseGenerated; record=count,vector);
@@ -26,6 +29,9 @@ simple HttpServer
         @statistic[cacheHits](title="Cache Hits"; source=cacheHit; record=count,vector);
         @statistic[cacheMisses](title="Cache Misses"; source=cacheMiss; record=count,vector);
         @statistic[predictiveCaching](title="Pages Pre-cached"; source=cachePreGenerated; record=count,vector);
+        @statistic[cacheExpired](title="Cache Entries Expired"; source=cacheExpired; record=count,vector);
+        @statistic[cacheEvicted](title="Cache Entries Evicted"; source=cacheEvicted; record=count,vector);
+        @statistic[cacheSize](title="Current Cache Size"; source=cacheSize; record=mean,max,vector);
         
     gates:
         input in[];
