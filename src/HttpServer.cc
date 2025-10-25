@@ -3,6 +3,8 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <algorithm>
+#include <iomanip>
 #include "HttpMessage.h"
 
 using namespace omnetpp;
@@ -47,6 +49,10 @@ private:
     int requestsReceived;
     int responsesGenerated;
     
+    // Pattern learning variables
+    std::map<std::pair<std::string, std::string>, int> patternTable;  // (fromPage, toPage) -> count
+    std::map<int, std::string> clientLastPage;  // clientId -> last page visited
+    
     // Random number generation for processing delay
     std::mt19937 rng;
     std::uniform_real_distribution<double> delayDistribution;
@@ -55,6 +61,7 @@ private:
     simsignal_t requestReceivedSignal;
     simsignal_t responseGeneratedSignal;
     simsignal_t processingTimeSignal;
+    simsignal_t patternLearnedSignal;
 
 protected:
     virtual void initialize() override;
@@ -67,6 +74,12 @@ protected:
     virtual void processDelayedRequest(cMessage *delayedMsg);
     virtual PageInfo* getPageInfo(int pageId);
     virtual std::string generatePageContent(const std::string& pageName);
+    
+    // Pattern learning methods
+    virtual void updatePatternTable(int clientId, const std::string& fromPage, const std::string& toPage);
+    virtual double calculateTransitionProbability(const std::string& fromPage, const std::string& toPage);
+    virtual std::string getPageName(int pageId);
+    virtual void printPatternStatistics();
 };
 
 Define_Module(HttpServer);
@@ -88,6 +101,7 @@ void HttpServer::initialize()
     requestReceivedSignal = registerSignal("requestReceived");
     responseGeneratedSignal = registerSignal("responseGenerated");
     processingTimeSignal = registerSignal("processingTime");
+    patternLearnedSignal = registerSignal("patternLearned");
     
     EV << "HttpServer initialized with " << webPages.size() << " web pages" << endl;
     EV << "Pages available: ";
@@ -199,6 +213,14 @@ void HttpServer::processDelayedRequest(cMessage *delayedMsg)
         responsesGenerated++;
         emit(responseGeneratedSignal, responsesGenerated);
         
+        // Pattern learning: Update pattern table if we have previous page information
+        std::string currentPageName = getPageName(resourceId);
+        std::string fromPageName = getPageName(fromPage);
+        
+        if (fromPage >= 0) {  // Valid fromPage
+            updatePatternTable(clientId, fromPageName, currentPageName);
+        }
+        
         EV << "Sent HttpResponse for page '" << pageInfo->pageName 
            << "' (size: " << pageInfo->contentSize << " bytes) "
            << "to client " << clientId 
@@ -296,5 +318,126 @@ void HttpServer::finish()
     for (const auto& page : webPages) {
         std::string statName = "page_" + page.second.pageName + "_size";
         recordScalar(statName.c_str(), page.second.contentSize);
+    }
+    
+    // Print pattern learning statistics
+    printPatternStatistics();
+}
+
+// Pattern learning method implementations
+void HttpServer::updatePatternTable(int clientId, const std::string& fromPage, const std::string& toPage)
+{
+    if (fromPage.empty() || toPage.empty() || fromPage == toPage) {
+        return;  // Skip invalid transitions
+    }
+    
+    // Create transition key
+    std::pair<std::string, std::string> transition(fromPage, toPage);
+    
+    // Update pattern table
+    patternTable[transition]++;
+    
+    // Emit pattern learning signal
+    emit(patternLearnedSignal, patternTable[transition]);
+    
+    // Update client's last page for next transition
+    clientLastPage[clientId] = toPage;
+    
+    EV << "Pattern learning: Client " << clientId << " transition " 
+       << fromPage << " -> " << toPage 
+       << " (count: " << patternTable[transition] << ")" << endl;
+}
+
+double HttpServer::calculateTransitionProbability(const std::string& fromPage, const std::string& toPage)
+{
+    if (fromPage.empty() || toPage.empty()) {
+        return 0.0;
+    }
+    
+    // Find the specific transition
+    std::pair<std::string, std::string> targetTransition(fromPage, toPage);
+    auto targetIt = patternTable.find(targetTransition);
+    
+    if (targetIt == patternTable.end()) {
+        return 0.0;  // No occurrences of this transition
+    }
+    
+    // Calculate total transitions from the fromPage
+    int totalFromPage = 0;
+    for (const auto& entry : patternTable) {
+        if (entry.first.first == fromPage) {
+            totalFromPage += entry.second;
+        }
+    }
+    
+    if (totalFromPage == 0) {
+        return 0.0;
+    }
+    
+    // Calculate probability
+    double probability = static_cast<double>(targetIt->second) / totalFromPage;
+    
+    EV << "Transition probability " << fromPage << " -> " << toPage 
+       << ": " << probability << " (" << targetIt->second 
+       << "/" << totalFromPage << ")" << endl;
+    
+    return probability;
+}
+
+std::string HttpServer::getPageName(int pageId)
+{
+    // Convert page ID to page name
+    switch (pageId) {
+        case HOME: return "home";
+        case LOGIN: return "login";
+        case DASHBOARD: return "dashboard";
+        case PROFILE: return "profile";
+        case SETTINGS: return "settings";
+        case LOGOUT: return "logout";
+        default: return "unknown";
+    }
+}
+
+void HttpServer::printPatternStatistics()
+{
+    EV << "=== Pattern Learning Statistics ===" << endl;
+    EV << "Total unique transitions learned: " << patternTable.size() << endl;
+    
+    if (patternTable.empty()) {
+        EV << "No patterns learned yet." << endl;
+        return;
+    }
+    
+    // Sort patterns by frequency
+    std::vector<std::pair<int, std::pair<std::string, std::string>>> sortedPatterns;
+    for (const auto& entry : patternTable) {
+        sortedPatterns.push_back({entry.second, entry.first});
+    }
+    
+    std::sort(sortedPatterns.rbegin(), sortedPatterns.rend());
+    
+    EV << "Top navigation patterns:" << endl;
+    int count = 0;
+    for (const auto& pattern : sortedPatterns) {
+        if (count >= 10) break;  // Show top 10
+        
+        int frequency = pattern.first;
+        const std::string& fromPage = pattern.second.first;
+        const std::string& toPage = pattern.second.second;
+        double probability = calculateTransitionProbability(fromPage, toPage);
+        
+        EV << "  " << fromPage << " -> " << toPage 
+           << ": " << frequency << " times (probability: " 
+           << std::fixed << std::setprecision(3) << probability << ")" << endl;
+        count++;
+    }
+    
+    // Record pattern statistics
+    recordScalar("totalPatterns", patternTable.size());
+    recordScalar("activeClients", clientLastPage.size());
+    
+    // Record most frequent transition
+    if (!sortedPatterns.empty()) {
+        recordScalar("maxTransitionCount", sortedPatterns[0].first);
     }
 }

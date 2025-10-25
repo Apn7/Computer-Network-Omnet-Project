@@ -14,10 +14,12 @@ simple HttpServer
         @signal[requestReceived](type="long");
         @signal[responseGenerated](type="long");
         @signal[processingTime](type="double");
+        @signal[patternLearned](type="long");
         
         @statistic[requestsReceived](title="Requests Received"; source=requestReceived; record=count,vector);
         @statistic[responsesGenerated](title="Responses Generated"; source=responseGenerated; record=count,vector);
         @statistic[processingDelay](title="Processing Delay"; source=processingTime; record=mean,max,min,vector; unit=s);
+        @statistic[patternsLearned](title="Navigation Patterns Learned"; source=patternLearned; record=count,vector);
         
     gates:
         input in[];
