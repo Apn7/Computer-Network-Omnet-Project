@@ -1,0 +1,867 @@
+version 3
+run Baseline-0-20251025-23:21:45-25240
+attr configname Baseline
+attr datetime 20251025-23:21:45
+attr datetimef 20251025-232145
+attr experiment Baseline
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network http_predictive_cache.HttpNetwork
+attr processid 25240
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config extends General
+config description "Baseline simulation with prediction DISABLED"
+config *.server.predictionThreshold 1.1
+config *.server.cacheTTL 5s
+config *.server.maxCacheSize 20
+config network http_predictive_cache.HttpNetwork
+config sim-time-limit 600s
+config repeat 3
+config *.numClients 10
+config *.server.predictionThreshold 0.6
+config *.server.cacheTTL 5s
+config *.server.maxCacheSize 20
+
+par HttpNetwork.client[0].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[0].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[0].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[0].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[0].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[0].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[0].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[0].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[0].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[0].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[0].channel per 0
+attr mutable ""
+par HttpNetwork.client[1].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[1].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[1].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[1].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[1].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[1].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[1].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[1].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[1].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[1].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[1].channel per 0
+attr mutable ""
+par HttpNetwork.client[2].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[2].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[2].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[2].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[2].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[2].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[2].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[2].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[2].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[2].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[2].channel per 0
+attr mutable ""
+par HttpNetwork.client[3].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[3].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[3].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[3].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[3].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[3].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[3].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[3].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[3].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[3].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[3].channel per 0
+attr mutable ""
+par HttpNetwork.client[4].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[4].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[4].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[4].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[4].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[4].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[4].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[4].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[4].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[4].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[4].channel per 0
+attr mutable ""
+par HttpNetwork.client[5].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[5].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[5].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[5].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[5].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[5].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[5].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[5].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[5].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[5].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[5].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[5].channel per 0
+attr mutable ""
+par HttpNetwork.client[6].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[6].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[6].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[6].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[6].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[6].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[6].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[6].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[6].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[6].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[6].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[6].channel per 0
+attr mutable ""
+par HttpNetwork.client[7].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[7].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[7].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[7].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[7].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[7].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[7].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[7].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[7].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[7].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[7].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[7].channel per 0
+attr mutable ""
+par HttpNetwork.client[8].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[8].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[8].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[8].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[8].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[8].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[8].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[8].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[8].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[8].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[8].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[8].channel per 0
+attr mutable ""
+par HttpNetwork.client[9].out.channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.client[9].out.channel disabled false
+attr mutable ""
+par HttpNetwork.client[9].out.channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.client[9].out.channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.client[9].out.channel ber 0
+attr mutable ""
+par HttpNetwork.client[9].out.channel per 0
+attr mutable ""
+par HttpNetwork.server.out[9].channel typename "\"http_predictive_cache.HttpNetwork.NetworkChannel\""
+par HttpNetwork.server.out[9].channel disabled false
+attr mutable ""
+par HttpNetwork.server.out[9].channel delay 0.01s
+attr mutable ""
+attr unit s
+par HttpNetwork.server.out[9].channel datarate 1e+08bps
+attr mutable ""
+attr unit bps
+par HttpNetwork.server.out[9].channel ber 0
+attr mutable ""
+par HttpNetwork.server.out[9].channel per 0
+attr mutable ""
+par HttpNetwork.server typename "\"http_predictive_cache.HttpServer\""
+par HttpNetwork.server predictionThreshold 1.1
+par HttpNetwork.server cacheTTL 5s
+attr unit s
+par HttpNetwork.server maxCacheSize 20
+scalar HttpNetwork.server requestsReceived 82
+scalar HttpNetwork.server responsesGenerated 79
+scalar HttpNetwork.server processingEfficiency 0.96341463414634
+scalar HttpNetwork.server webPagesCount 6
+scalar HttpNetwork.server page_home_size 443
+scalar HttpNetwork.server page_login_size 391
+scalar HttpNetwork.server page_dashboard_size 518
+scalar HttpNetwork.server page_profile_size 348
+scalar HttpNetwork.server page_settings_size 376
+scalar HttpNetwork.server page_logout_size 366
+scalar HttpNetwork.server totalPatterns 17
+scalar HttpNetwork.server activeClients 10
+scalar HttpNetwork.server maxTransitionCount 18
+scalar HttpNetwork.server maxCacheSize 20
+scalar HttpNetwork.server finalCacheSize 0
+scalar HttpNetwork.server cacheUtilization 0
+scalar HttpNetwork.server totalCacheHits 0
+scalar HttpNetwork.server totalCacheMisses 82
+scalar HttpNetwork.server totalRequests 82
+scalar HttpNetwork.server finalCacheHitRate 0
+scalar HttpNetwork.server totalTimeSaved 0
+scalar HttpNetwork.server averageTimeSaved 0
+scalar HttpNetwork.server configPredictionThreshold 1.1
+scalar HttpNetwork.server configCacheTTL 5
+scalar HttpNetwork.server configMaxCacheSize 20
+scalar HttpNetwork.server requestsCompleted:count 52
+attr recordingmode count
+attr source requestComplete
+attr title "Completed Requests, count"
+scalar HttpNetwork.server timeSavingsStats:mean -nan(ind)
+attr recordingmode mean
+attr source timeSavings
+attr title "Time Savings from Cache, mean"
+attr unit s
+scalar HttpNetwork.server timeSavingsStats:max nan
+attr recordingmode max
+attr source timeSavings
+attr title "Time Savings from Cache, max"
+attr unit s
+scalar HttpNetwork.server timeSavingsStats:sum 0
+attr recordingmode sum
+attr source timeSavings
+attr title "Time Savings from Cache, sum"
+attr unit s
+scalar HttpNetwork.server cacheHitRateStats:last 0
+attr recordingmode last
+attr source cacheHitRate
+attr title "Cache Hit Rate, last"
+attr unit %
+scalar HttpNetwork.server cacheHitRateStats:mean 0
+attr recordingmode mean
+attr source cacheHitRate
+attr title "Cache Hit Rate, mean"
+attr unit %
+scalar HttpNetwork.server responseTimeStats:mean 0.094327012916538
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time per Request, mean"
+attr unit s
+scalar HttpNetwork.server responseTimeStats:max 0.199403251133
+attr recordingmode max
+attr source responseTime
+attr title "Response Time per Request, max"
+attr unit s
+scalar HttpNetwork.server responseTimeStats:min 0.001323367853
+attr recordingmode min
+attr source responseTime
+attr title "Response Time per Request, min"
+attr unit s
+statistic HttpNetwork.server responseTimeStats:histogram
+field count 52
+field mean 0.094327012916538
+field stddev 0.0566656638759
+field min 0.001323367853
+field max 0.199403251133
+field sum 4.90500467166
+field sqrsum 0.62643530960668
+attr recordingmode histogram
+attr source responseTime
+attr title "Response Time per Request"
+attr unit s
+bin	-inf	0
+bin	0	3
+bin	0.005	1
+bin	0.01	3
+bin	0.015	0
+bin	0.02	0
+bin	0.025	3
+bin	0.03	1
+bin	0.035	0
+bin	0.04	1
+bin	0.045	0
+bin	0.05	3
+bin	0.055	0
+bin	0.06	2
+bin	0.065	2
+bin	0.07	2
+bin	0.075	1
+bin	0.08	0
+bin	0.085	0
+bin	0.09	1
+bin	0.095	0
+bin	0.1	0
+bin	0.105	8
+bin	0.11	2
+bin	0.115	3
+bin	0.12	0
+bin	0.125	2
+bin	0.13	1
+bin	0.135	2
+bin	0.14	1
+bin	0.145	1
+bin	0.15	1
+bin	0.155	1
+bin	0.16	1
+bin	0.165	1
+bin	0.17	1
+bin	0.175	0
+bin	0.18	0
+bin	0.185	0
+bin	0.19	3
+bin	0.195	1
+bin	0.2	0
+bin	0.205	0
+bin	0.21	0
+bin	0.215	0
+bin	0.22	0
+bin	0.225	0
+bin	0.23	0
+bin	0.235	0
+bin	0.24	0
+bin	0.245	0
+bin	0.25	0
+scalar HttpNetwork.server cacheSize:mean -nan(ind)
+attr recordingmode mean
+attr source cacheSize
+attr title "Current Cache Size, mean"
+scalar HttpNetwork.server cacheSize:max nan
+attr recordingmode max
+attr source cacheSize
+attr title "Current Cache Size, max"
+scalar HttpNetwork.server cacheEvicted:count 0
+attr recordingmode count
+attr source cacheEvicted
+attr title "Cache Entries Evicted, count"
+scalar HttpNetwork.server cacheExpired:count 0
+attr recordingmode count
+attr source cacheExpired
+attr title "Cache Entries Expired, count"
+scalar HttpNetwork.server predictiveCaching:count 0
+attr recordingmode count
+attr source cachePreGenerated
+attr title "Pages Pre-cached, count"
+scalar HttpNetwork.server cacheMisses:count 82
+attr recordingmode count
+attr source cacheMiss
+attr title "Cache Misses, count"
+scalar HttpNetwork.server cacheHits:count 0
+attr recordingmode count
+attr source cacheHit
+attr title "Cache Hits, count"
+scalar HttpNetwork.server patternsLearned:count 67
+attr recordingmode count
+attr source patternLearned
+attr title "Navigation Patterns Learned, count"
+scalar HttpNetwork.server processingDelay:mean 0.14570917444465
+attr recordingmode mean
+attr source processingTime
+attr title "Processing Delay, mean"
+attr unit s
+scalar HttpNetwork.server processingDelay:max 0.1998022155682
+attr recordingmode max
+attr source processingTime
+attr title "Processing Delay, max"
+attr unit s
+scalar HttpNetwork.server processingDelay:min 0.10006241635169
+attr recordingmode min
+attr source processingTime
+attr title "Processing Delay, min"
+attr unit s
+scalar HttpNetwork.server responsesGenerated:count 79
+attr recordingmode count
+attr source responseGenerated
+attr title "Responses Generated, count"
+scalar HttpNetwork.server requestsReceived:count 82
+attr recordingmode count
+attr source requestReceived
+attr title "Requests Received, count"
+par HttpNetwork.client[0] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[0] requestsSent 9
+scalar HttpNetwork.client[0] responsesReceived 9
+scalar HttpNetwork.client[0] responseRate 1
+scalar HttpNetwork.client[0] avgResponseTime 0.15
+scalar HttpNetwork.client[0] patternFollowed 0
+scalar HttpNetwork.client[0] randomChoices 0
+scalar HttpNetwork.client[0] randomSelections:count 4
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[0] patternUsage:count 5
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[0] responsesReceived:count 9
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[0] requestsSent:count 9
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[0] responseTime:mean 0.16150521858944
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[0] responseTime:max 0.19992327633
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[0] responseTime:min 0.125104485215
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[1] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[1] requestsSent 8
+scalar HttpNetwork.client[1] responsesReceived 7
+scalar HttpNetwork.client[1] responseRate 0.875
+scalar HttpNetwork.client[1] avgResponseTime 0.15
+scalar HttpNetwork.client[1] patternFollowed 0
+scalar HttpNetwork.client[1] randomChoices 0
+scalar HttpNetwork.client[1] randomSelections:count 2
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[1] patternUsage:count 6
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[1] responsesReceived:count 7
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[1] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[1] responseTime:mean 0.18006191390129
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[1] responseTime:max 0.218193586073
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[1] responseTime:min 0.139037412759
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[2] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[2] requestsSent 8
+scalar HttpNetwork.client[2] responsesReceived 8
+scalar HttpNetwork.client[2] responseRate 1
+scalar HttpNetwork.client[2] avgResponseTime 0.15
+scalar HttpNetwork.client[2] patternFollowed 0
+scalar HttpNetwork.client[2] randomChoices 0
+scalar HttpNetwork.client[2] randomSelections:count 0
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[2] patternUsage:count 8
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[2] responsesReceived:count 8
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[2] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[2] responseTime:mean 0.17112031479812
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[2] responseTime:max 0.219403251133
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[2] responseTime:min 0.128039733687
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[3] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[3] requestsSent 8
+scalar HttpNetwork.client[3] responsesReceived 8
+scalar HttpNetwork.client[3] responseRate 1
+scalar HttpNetwork.client[3] avgResponseTime 0.15
+scalar HttpNetwork.client[3] patternFollowed 0
+scalar HttpNetwork.client[3] randomChoices 0
+scalar HttpNetwork.client[3] randomSelections:count 1
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[3] patternUsage:count 7
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[3] responsesReceived:count 8
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[3] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[3] responseTime:mean 0.1755505632115
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[3] responseTime:max 0.211494071561
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[3] responseTime:min 0.129473084106
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[4] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[4] requestsSent 9
+scalar HttpNetwork.client[4] responsesReceived 8
+scalar HttpNetwork.client[4] responseRate 0.88888888888889
+scalar HttpNetwork.client[4] avgResponseTime 0.15
+scalar HttpNetwork.client[4] patternFollowed 0
+scalar HttpNetwork.client[4] randomChoices 0
+scalar HttpNetwork.client[4] randomSelections:count 4
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[4] patternUsage:count 5
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[4] responsesReceived:count 8
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[4] requestsSent:count 9
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[4] responseTime:mean 0.17324218969275
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[4] responseTime:max 0.210114790227
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[4] responseTime:min 0.129075576823
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[5] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[5] requestsSent 8
+scalar HttpNetwork.client[5] responsesReceived 8
+scalar HttpNetwork.client[5] responseRate 1
+scalar HttpNetwork.client[5] avgResponseTime 0.15
+scalar HttpNetwork.client[5] patternFollowed 0
+scalar HttpNetwork.client[5] randomChoices 0
+scalar HttpNetwork.client[5] randomSelections:count 0
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[5] patternUsage:count 8
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[5] responsesReceived:count 8
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[5] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[5] responseTime:mean 0.1579961641355
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[5] responseTime:max 0.213957416852
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[5] responseTime:min 0.126051147173
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[6] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[6] requestsSent 8
+scalar HttpNetwork.client[6] responsesReceived 7
+scalar HttpNetwork.client[6] responseRate 0.875
+scalar HttpNetwork.client[6] avgResponseTime 0.15
+scalar HttpNetwork.client[6] patternFollowed 0
+scalar HttpNetwork.client[6] randomChoices 0
+scalar HttpNetwork.client[6] randomSelections:count 0
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[6] patternUsage:count 8
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[6] responsesReceived:count 7
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[6] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[6] responseTime:mean 0.15247987446757
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[6] responseTime:max 0.202815816183
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[6] responseTime:min 0.120062416352
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[7] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[7] requestsSent 9
+scalar HttpNetwork.client[7] responsesReceived 9
+scalar HttpNetwork.client[7] responseRate 1
+scalar HttpNetwork.client[7] avgResponseTime 0.15
+scalar HttpNetwork.client[7] patternFollowed 0
+scalar HttpNetwork.client[7] randomChoices 0
+scalar HttpNetwork.client[7] randomSelections:count 4
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[7] patternUsage:count 5
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[7] responsesReceived:count 9
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[7] requestsSent:count 9
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[7] responseTime:mean 0.16988882021489
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[7] responseTime:max 0.200149010199
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[7] responseTime:min 0.137265270149
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[8] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[8] requestsSent 8
+scalar HttpNetwork.client[8] responsesReceived 8
+scalar HttpNetwork.client[8] responseRate 1
+scalar HttpNetwork.client[8] avgResponseTime 0.15
+scalar HttpNetwork.client[8] patternFollowed 0
+scalar HttpNetwork.client[8] randomChoices 0
+scalar HttpNetwork.client[8] randomSelections:count 3
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[8] patternUsage:count 5
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[8] responsesReceived:count 8
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[8] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[8] responseTime:mean 0.15455468393875
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[8] responseTime:max 0.183061448464
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[8] responseTime:min 0.124846339207
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork.client[9] typename "\"http_predictive_cache.HttpClient\""
+scalar HttpNetwork.client[9] requestsSent 8
+scalar HttpNetwork.client[9] responsesReceived 7
+scalar HttpNetwork.client[9] responseRate 0.875
+scalar HttpNetwork.client[9] avgResponseTime 0.15
+scalar HttpNetwork.client[9] patternFollowed 0
+scalar HttpNetwork.client[9] randomChoices 0
+scalar HttpNetwork.client[9] randomSelections:count 0
+attr recordingmode count
+attr source randomChoice
+attr title "Random Selections, count"
+scalar HttpNetwork.client[9] patternUsage:count 8
+attr recordingmode count
+attr source patternFollowed
+attr title "Pattern Followed, count"
+scalar HttpNetwork.client[9] responsesReceived:count 7
+attr recordingmode count
+attr source responseReceived
+attr title "Responses Received, count"
+scalar HttpNetwork.client[9] requestsSent:count 8
+attr recordingmode count
+attr source requestSent
+attr title "Requests Sent, count"
+scalar HttpNetwork.client[9] responseTime:mean 0.151291761817
+attr recordingmode mean
+attr source responseTime
+attr title "Response Time, mean"
+attr unit s
+scalar HttpNetwork.client[9] responseTime:max 0.175012841357
+attr recordingmode max
+attr source responseTime
+attr title "Response Time, max"
+attr unit s
+scalar HttpNetwork.client[9] responseTime:min 0.134179408072
+attr recordingmode min
+attr source responseTime
+attr title "Response Time, min"
+attr unit s
+par HttpNetwork typename "\"http_predictive_cache.HttpNetwork\""
+par HttpNetwork numClients 10
+

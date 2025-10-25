@@ -56,11 +56,12 @@ private:
     
     // Predictive caching variables
     std::map<std::string, CacheEntry> responseCache;  // pageName -> cached response
-    double predictionThreshold;  // Minimum probability for pre-caching (60%)
+    double predictionThreshold;  // Minimum probability for pre-caching (configurable)
+    int cacheTTL;  // Cache entry time-to-live in seconds (configurable)
     
     // Cache management variables
     std::map<std::string, cMessage*> cacheExpiryMessages;  // pageName -> expiry message
-    int maxCacheSize;  // Maximum number of cached entries
+    int maxCacheSize;  // Maximum number of cached entries (configurable)
     int currentCacheSize;  // Current number of cached entries
     double cacheCleanupInterval;  // Periodic cleanup interval in seconds
     cMessage* cacheCleanupTimer;  // Timer for periodic cleanup
@@ -135,12 +136,13 @@ void HttpServer::initialize()
     rng.seed(intuniform(0, 100000));
     delayDistribution = std::uniform_real_distribution<double>(0.1, 0.2);  // 100-200ms
     
-    // Initialize predictive caching
+    // Initialize predictive caching - READ FROM PARAMETERS
     cacheHitDelayDistribution = std::uniform_real_distribution<double>(0.01, 0.02); // 10-20ms
-    predictionThreshold = 0.6; // 60%
+    predictionThreshold = par("predictionThreshold").doubleValue();
+    cacheTTL = par("cacheTTL").intValue();
     
-    // Initialize cache management
-    maxCacheSize = 20;  // Maximum 20 cached pages
+    // Initialize cache management - READ FROM PARAMETERS
+    maxCacheSize = par("maxCacheSize").intValue();
     currentCacheSize = 0;
     cacheCleanupInterval = 10.0;  // Cleanup every 10 seconds
     cacheCleanupTimer = new cMessage("CacheCleanup");
@@ -171,6 +173,8 @@ void HttpServer::initialize()
     totalTimeSaved = 0.0;
     
     EV << "HttpServer initialized with " << webPages.size() << " web pages" << endl;
+    EV << "Configuration: predictionThreshold=" << predictionThreshold 
+       << ", cacheTTL=" << cacheTTL << "s, maxCacheSize=" << maxCacheSize << endl;
     EV << "Pages available: ";
     for (const auto& page : webPages) {
         EV << page.second.pageName << " ";
@@ -568,6 +572,11 @@ void HttpServer::finish()
     recordScalar("totalTimeSaved", totalTimeSaved);
     recordScalar("averageTimeSaved", totalCacheHits > 0 ? totalTimeSaved / totalCacheHits : 0.0);
     
+    // Record configuration parameters used
+    recordScalar("configPredictionThreshold", predictionThreshold);
+    recordScalar("configCacheTTL", cacheTTL);
+    recordScalar("configMaxCacheSize", maxCacheSize);
+    
     // Emit final cache hit rate
     if (totalRequests > 0) {
         emit(cacheHitRateSignal, finalHitRate);
@@ -755,20 +764,20 @@ void HttpServer::predictivePreCache(const std::string& currentPage)
                     // Pre-generate response for likely next page
                     std::string responseContent = generatePageContent(toPage);
                     
-                    // Create cache entry with 5 second TTL
+                    // Create cache entry with configurable TTL
                     // We'll use -1 as resourceId since we're indexing by page name
-                    CacheEntry cacheEntry(-1, responseContent, 5);
+                    CacheEntry cacheEntry(-1, responseContent, cacheTTL);
                     cacheEntry.setTimestamp(simTime());
                     
                     // Use cache management system to add entry
                     if (addToCacheWithManagement(toPage, cacheEntry)) {
                         EV << "Pre-cached response for page '" << toPage 
                            << "' (probability: " << std::fixed << std::setprecision(3) 
-                           << probability << ")" << endl;
+                           << probability << ", TTL: " << cacheTTL << "s)" << endl;
                         emit(cachePreGeneratedSignal, 1);
                         
                         // Schedule expiry for this cache entry
-                        scheduleCacheExpiry(toPage, 5.0);
+                        scheduleCacheExpiry(toPage, (double)cacheTTL);
                     } else {
                         EV << "Failed to cache page '" << toPage << "' - cache full" << endl;
                     }

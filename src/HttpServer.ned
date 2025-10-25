@@ -10,6 +10,11 @@ simple HttpServer
     parameters:
         @display("i=device/server2");
         
+        // Configurable parameters for predictive caching
+        double predictionThreshold = default(0.6);  // Probability threshold for pre-caching (0.0-1.0)
+        int cacheTTL @unit(s) = default(5s);        // Cache entry time-to-live in seconds
+        int maxCacheSize = default(20);             // Maximum number of cached entries
+        
         // Statistics collection
         @signal[requestReceived](type="long");
         @signal[responseGenerated](type="long");
