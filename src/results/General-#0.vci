@@ -1,0 +1,258 @@
+file 8753 1761404292                                            
+version 3
+run General-0-20251025-20:57:33-23724
+attr configname General
+attr datetime 20251025-20:57:33
+attr datetimef 20251025-205733
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network HttpNetwork
+attr processid 23724
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config network HttpNetwork
+
+vector 0 HttpNetwork.server requestsReceived:vector ETV
+attr recordingmode vector
+attr source requestReceived
+attr title "Requests Received"
+vector 1 HttpNetwork.server responsesGenerated:vector ETV
+attr recordingmode vector
+attr source responseGenerated
+attr title "Responses Generated"
+vector 2 HttpNetwork.server processingDelay:vector ETV
+attr recordingmode vector
+attr source processingTime
+attr title "Processing Delay"
+attr unit s
+vector 3 HttpNetwork.client[0] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 4 HttpNetwork.client[0] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 5 HttpNetwork.client[0] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 6 HttpNetwork.client[0] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 7 HttpNetwork.client[0] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 8 HttpNetwork.client[1] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 9 HttpNetwork.client[1] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 10 HttpNetwork.client[1] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 11 HttpNetwork.client[1] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 12 HttpNetwork.client[1] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 13 HttpNetwork.client[2] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 14 HttpNetwork.client[2] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 15 HttpNetwork.client[2] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 16 HttpNetwork.client[2] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 17 HttpNetwork.client[2] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 18 HttpNetwork.client[3] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 19 HttpNetwork.client[3] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 20 HttpNetwork.client[3] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 21 HttpNetwork.client[3] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 22 HttpNetwork.client[3] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 23 HttpNetwork.client[4] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 24 HttpNetwork.client[4] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 25 HttpNetwork.client[4] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 26 HttpNetwork.client[4] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 27 HttpNetwork.client[4] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 28 HttpNetwork.client[5] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 29 HttpNetwork.client[5] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 30 HttpNetwork.client[5] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 31 HttpNetwork.client[5] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 32 HttpNetwork.client[5] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 33 HttpNetwork.client[6] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 34 HttpNetwork.client[6] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 35 HttpNetwork.client[6] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 36 HttpNetwork.client[6] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 37 HttpNetwork.client[6] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 38 HttpNetwork.client[7] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 39 HttpNetwork.client[7] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 40 HttpNetwork.client[7] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 41 HttpNetwork.client[7] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 42 HttpNetwork.client[7] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 43 HttpNetwork.client[8] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 44 HttpNetwork.client[8] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 45 HttpNetwork.client[8] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 46 HttpNetwork.client[8] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 47 HttpNetwork.client[8] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+vector 48 HttpNetwork.client[9] requestsSent:vector ETV
+attr recordingmode vector
+attr source requestSent
+attr title "Requests Sent"
+vector 49 HttpNetwork.client[9] responsesReceived:vector ETV
+attr recordingmode vector
+attr source responseReceived
+attr title "Responses Received"
+vector 50 HttpNetwork.client[9] responseTime:vector ETV
+attr recordingmode vector
+attr source responseTime
+attr title "Response Time"
+attr unit s
+vector 51 HttpNetwork.client[9] patternUsage:vector ETV
+attr recordingmode vector
+attr source patternFollowed
+attr title "Pattern Followed"
+vector 52 HttpNetwork.client[9] randomSelections:vector ETV
+attr recordingmode vector
+attr source randomChoice
+attr title "Random Selections"
+0	8203 111 3 11 0.263376608528 0.396075745989 5 1 5 15 55
+1	8314 23 10 10 0.389586756946 0.389586756946 1 1 1 1 1
+2	8337 186 3 11 0.263376608528 0.396075745989 5 0.12621014841834 0.17992327632957 0.79370810671998 0.1288422213822
+3	8523 22 9 9 0.386075745989 0.386075745989 1 1 1 1 1
+6	8545 22 9 9 0.386075745989 0.386075745989 1 1 1 1 1
+18	8567 23 7 7 0.349425478559 0.349425478559 1 1 1 1 1
+21	8590 23 7 7 0.349425478559 0.349425478559 1 1 1 1 1
+23	8613 23 2 2 0.253752683289 0.253752683289 1 1 1 1 1
+26	8636 23 2 2 0.253752683289 0.253752683289 1 1 1 1 1
+38	8659 23 1 1 0.253376608528 0.253376608528 1 1 1 1 1
+42	8682 23 1 1 0.253376608528 0.253376608528 1 1 1 1 1
+48	8705 23 5 5 0.311557968613 0.311557968613 1 1 1 1 1
+51	8728 23 5 5 0.311557968613 0.311557968613 1 1 1 1 1
+

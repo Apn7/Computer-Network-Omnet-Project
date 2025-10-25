@@ -31,7 +31,7 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/Module_1.o $O/HttpClient.o $O/HttpServer.o
+OBJS = $O/HttpClient.o $O/HttpServer.o $O/HttpMessage.o $O/CacheEntry.o $O/PatternTable.o
 
 # Message files
 MSGFILES =
