@@ -65,6 +65,12 @@ private:
     double cacheCleanupInterval;  // Periodic cleanup interval in seconds
     cMessage* cacheCleanupTimer;  // Timer for periodic cleanup
     
+    // Metrics tracking variables
+    std::map<int, simtime_t> requestStartTimes;  // requestId -> start time
+    int totalCacheHits;
+    int totalCacheMisses;
+    double totalTimeSaved;
+    
     // Random number generation for processing delay
     std::mt19937 rng;
     std::uniform_real_distribution<double> delayDistribution;
@@ -81,6 +87,10 @@ private:
     simsignal_t cacheExpiredSignal;
     simsignal_t cacheEvictedSignal;
     simsignal_t cacheSizeSignal;
+    simsignal_t responseTimeSignal;
+    simsignal_t cacheHitRateSignal;
+    simsignal_t timeSavingsSignal;
+    simsignal_t requestCompleteSignal;
 
 protected:
     virtual void initialize() override;
@@ -150,6 +160,15 @@ void HttpServer::initialize()
     cacheExpiredSignal = registerSignal("cacheExpired");
     cacheEvictedSignal = registerSignal("cacheEvicted");
     cacheSizeSignal = registerSignal("cacheSize");
+    responseTimeSignal = registerSignal("responseTime");
+    cacheHitRateSignal = registerSignal("cacheHitRate");
+    timeSavingsSignal = registerSignal("timeSavings");
+    requestCompleteSignal = registerSignal("requestComplete");
+    
+    // Initialize metrics tracking
+    totalCacheHits = 0;
+    totalCacheMisses = 0;
+    totalTimeSaved = 0.0;
     
     EV << "HttpServer initialized with " << webPages.size() << " web pages" << endl;
     EV << "Pages available: ";
@@ -185,6 +204,17 @@ void HttpServer::handleMessage(cMessage *msg)
             
             responsesGenerated++;
             emit(responseGeneratedSignal, responsesGenerated);
+            
+            // Calculate and emit response time
+            auto startTimeIt = requestStartTimes.find(requestId);
+            if (startTimeIt != requestStartTimes.end()) {
+                double responseTime = SIMTIME_DBL(simTime() - startTimeIt->second);
+                emit(responseTimeSignal, responseTime);
+                requestStartTimes.erase(startTimeIt);
+                emit(requestCompleteSignal, 1);
+                
+                EV << "Response time for cached request " << requestId << ": " << responseTime << "s" << endl;
+            }
             
             // Pattern learning for cached requests too
             std::string currentPageName = getPageName(resourceId);
@@ -260,6 +290,9 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
        << " for resource " << request->getResourceId() 
        << " (request ID: " << request->getRequestId() << ")" << endl;
     
+    // Record request start time for response time calculation
+    requestStartTimes[request->getRequestId()] = simTime();
+    
     // Check cache first
     std::string pageName = getPageName(request->getResourceId());
     std::string cachedResponse;
@@ -270,7 +303,20 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
         emit(processingTimeSignal, cacheDelay);
         
         EV << "Cache HIT for page '" << pageName << "' - serving with " << cacheDelay << "s delay" << endl;
+        
+        // Update cache hit metrics
+        totalCacheHits++;
         emit(cacheHitSignal, 1);
+        
+        // Calculate time savings (normal delay - cache delay)
+        double normalDelay = (delayDistribution.min() + delayDistribution.max()) / 2.0; // Average normal delay
+        double timeSaved = normalDelay - cacheDelay;
+        totalTimeSaved += timeSaved;
+        emit(timeSavingsSignal, timeSaved);
+        
+        // Update cache hit rate
+        double hitRate = (double)totalCacheHits / (totalCacheHits + totalCacheMisses) * 100.0;
+        emit(cacheHitRateSignal, hitRate);
         
         // Create response from cache
         HttpResponse *response = new HttpResponse("HttpResponse");
@@ -297,7 +343,16 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
     
     // Cache miss - generate normal processing delay (100-200ms)
     EV << "Cache MISS for page '" << pageName << "' - processing normally" << endl;
+    
+    // Update cache miss metrics
+    totalCacheMisses++;
     emit(cacheMissSignal, 1);
+    
+    // Update cache hit rate
+    double hitRate = (totalCacheHits + totalCacheMisses > 0) ? 
+                     (double)totalCacheHits / (totalCacheHits + totalCacheMisses) * 100.0 : 0.0;
+    emit(cacheHitRateSignal, hitRate);
+    
     double delay = delayDistribution(rng);
     emit(processingTimeSignal, delay);
     
@@ -349,6 +404,17 @@ void HttpServer::processDelayedRequest(cMessage *delayedMsg)
         responsesGenerated++;
         emit(responseGeneratedSignal, responsesGenerated);
         
+        // Calculate and emit response time
+        auto startTimeIt = requestStartTimes.find(requestId);
+        if (startTimeIt != requestStartTimes.end()) {
+            double responseTime = SIMTIME_DBL(simTime() - startTimeIt->second);
+            emit(responseTimeSignal, responseTime);
+            requestStartTimes.erase(startTimeIt);
+            emit(requestCompleteSignal, 1);
+            
+            EV << "Response time for request " << requestId << ": " << responseTime << "s" << endl;
+        }
+        
         // Pattern learning: Update pattern table if we have previous page information
         std::string currentPageName = getPageName(resourceId);
         std::string fromPageName = getPageName(fromPage);
@@ -379,6 +445,17 @@ void HttpServer::processDelayedRequest(cMessage *delayedMsg)
         send(errorResponse, "out", arrivalGate);
         responsesGenerated++;
         emit(responseGeneratedSignal, responsesGenerated);
+        
+        // Calculate response time for error responses too
+        auto startTimeIt = requestStartTimes.find(requestId);
+        if (startTimeIt != requestStartTimes.end()) {
+            double responseTime = SIMTIME_DBL(simTime() - startTimeIt->second);
+            emit(responseTimeSignal, responseTime);
+            requestStartTimes.erase(startTimeIt);
+            emit(requestCompleteSignal, 1);
+            
+            EV << "Response time for error request " << requestId << ": " << responseTime << "s" << endl;
+        }
     }
     
     delete delayedMsg;
@@ -479,6 +556,29 @@ void HttpServer::finish()
     recordScalar("maxCacheSize", maxCacheSize);
     recordScalar("finalCacheSize", currentCacheSize);
     recordScalar("cacheUtilization", currentCacheSize > 0 ? (double)currentCacheSize / maxCacheSize : 0.0);
+    
+    // Record comprehensive metrics
+    int totalRequests = totalCacheHits + totalCacheMisses;
+    double finalHitRate = (totalRequests > 0) ? (double)totalCacheHits / totalRequests * 100.0 : 0.0;
+    
+    recordScalar("totalCacheHits", totalCacheHits);
+    recordScalar("totalCacheMisses", totalCacheMisses);
+    recordScalar("totalRequests", totalRequests);
+    recordScalar("finalCacheHitRate", finalHitRate);
+    recordScalar("totalTimeSaved", totalTimeSaved);
+    recordScalar("averageTimeSaved", totalCacheHits > 0 ? totalTimeSaved / totalCacheHits : 0.0);
+    
+    // Emit final cache hit rate
+    if (totalRequests > 0) {
+        emit(cacheHitRateSignal, finalHitRate);
+    }
+    
+    EV << "=== Performance Metrics ===" << endl;
+    EV << "Total requests processed: " << totalRequests << endl;
+    EV << "Cache hits: " << totalCacheHits << " (" << finalHitRate << "%)" << endl;
+    EV << "Cache misses: " << totalCacheMisses << endl;
+    EV << "Total time saved: " << totalTimeSaved << "s" << endl;
+    EV << "Average time saved per cache hit: " << (totalCacheHits > 0 ? totalTimeSaved / totalCacheHits : 0.0) << "s" << endl;
 }
 
 // Pattern learning method implementations
