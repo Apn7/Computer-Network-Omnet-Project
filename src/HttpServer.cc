@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iomanip>
 #include "HttpMessage.h"
+#include "CacheEntry.h"
 
 using namespace omnetpp;
 
@@ -53,15 +54,23 @@ private:
     std::map<std::pair<std::string, std::string>, int> patternTable;  // (fromPage, toPage) -> count
     std::map<int, std::string> clientLastPage;  // clientId -> last page visited
     
+    // Predictive caching variables
+    std::map<std::string, CacheEntry> responseCache;  // pageName -> cached response
+    double predictionThreshold;  // Minimum probability for pre-caching (60%)
+    
     // Random number generation for processing delay
     std::mt19937 rng;
     std::uniform_real_distribution<double> delayDistribution;
+    std::uniform_real_distribution<double> cacheHitDelayDistribution;
     
     // Statistics signals
     simsignal_t requestReceivedSignal;
     simsignal_t responseGeneratedSignal;
     simsignal_t processingTimeSignal;
     simsignal_t patternLearnedSignal;
+    simsignal_t cacheHitSignal;
+    simsignal_t cacheMissSignal;
+    simsignal_t cachePreGeneratedSignal;
 
 protected:
     virtual void initialize() override;
@@ -80,6 +89,10 @@ protected:
     virtual double calculateTransitionProbability(const std::string& fromPage, const std::string& toPage);
     virtual std::string getPageName(int pageId);
     virtual void printPatternStatistics();
+    
+    // Predictive caching methods
+    virtual bool checkResponseCache(const std::string& page, std::string& cachedResponse);
+    virtual void predictivePreCache(const std::string& currentPage);
 };
 
 Define_Module(HttpServer);
@@ -94,6 +107,10 @@ void HttpServer::initialize()
     rng.seed(intuniform(0, 100000));
     delayDistribution = std::uniform_real_distribution<double>(0.1, 0.2);  // 100-200ms
     
+    // Initialize predictive caching
+    cacheHitDelayDistribution = std::uniform_real_distribution<double>(0.01, 0.02); // 10-20ms
+    predictionThreshold = 0.6; // 60%
+    
     // Initialize web pages
     initializeWebPages();
     
@@ -102,6 +119,9 @@ void HttpServer::initialize()
     responseGeneratedSignal = registerSignal("responseGenerated");
     processingTimeSignal = registerSignal("processingTime");
     patternLearnedSignal = registerSignal("patternLearned");
+    cacheHitSignal = registerSignal("cacheHit");
+    cacheMissSignal = registerSignal("cacheMiss");
+    cachePreGeneratedSignal = registerSignal("cachePreGenerated");
     
     EV << "HttpServer initialized with " << webPages.size() << " web pages" << endl;
     EV << "Pages available: ";
@@ -114,8 +134,49 @@ void HttpServer::initialize()
 void HttpServer::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
-        // This is a delayed processing message
-        processDelayedRequest(msg);
+        // Check if this is a cached response or delayed processing
+        if (strcmp(msg->getName(), "CachedResponse") == 0) {
+            // Handle cached response
+            int requestId = msg->par("requestId");
+            int clientId = msg->par("clientId");
+            int resourceId = msg->par("resourceId");
+            int fromPage = msg->par("fromPage");
+            int arrivalGate = msg->par("arrivalGate");
+            const char* content = msg->par("content");
+            
+            // Create and send cached response
+            HttpResponse *response = new HttpResponse("HttpResponse");
+            response->setRequestId(requestId);
+            response->setResourceId(resourceId);
+            response->setContent(content);
+            response->setTimestamp(simTime());
+            response->setTtl(3600);
+            response->setCacheable(true);
+            
+            send(response, "out", arrivalGate);
+            
+            responsesGenerated++;
+            emit(responseGeneratedSignal, responsesGenerated);
+            
+            // Pattern learning for cached requests too
+            std::string currentPageName = getPageName(resourceId);
+            std::string fromPageName = getPageName(fromPage);
+            
+            if (fromPage >= 0) {  // Valid fromPage
+                updatePatternTable(clientId, fromPageName, currentPageName);
+            }
+            
+            // Trigger predictive pre-caching
+            predictivePreCache(currentPageName);
+            
+            EV << "Sent cached response for page '" << currentPageName 
+               << "' to client " << clientId << endl;
+               
+            delete msg;
+        } else {
+            // This is a delayed processing message
+            processDelayedRequest(msg);
+        }
     } else {
         // This is an incoming HTTP request
         HttpRequest *httpRequest = dynamic_cast<HttpRequest*>(msg);
@@ -161,7 +222,44 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
        << " for resource " << request->getResourceId() 
        << " (request ID: " << request->getRequestId() << ")" << endl;
     
-    // Generate random processing delay (100-200ms)
+    // Check cache first
+    std::string pageName = getPageName(request->getResourceId());
+    std::string cachedResponse;
+    
+    if (checkResponseCache(pageName, cachedResponse)) {
+        // Cache hit - serve from cache with reduced delay
+        double cacheDelay = cacheHitDelayDistribution(rng);
+        emit(processingTimeSignal, cacheDelay);
+        
+        EV << "Cache HIT for page '" << pageName << "' - serving with " << cacheDelay << "s delay" << endl;
+        emit(cacheHitSignal, 1);
+        
+        // Create response from cache
+        HttpResponse *response = new HttpResponse("HttpResponse");
+        response->setRequestId(request->getRequestId());
+        response->setResourceId(request->getResourceId());
+        response->setContent(cachedResponse);
+        response->setTimestamp(simTime() + cacheDelay);
+        response->setTtl(3600);
+        response->setCacheable(true);
+        
+        // Schedule sending the cached response
+        cMessage *cachedMsg = new cMessage("CachedResponse");
+        cachedMsg->addPar("requestId") = request->getRequestId();
+        cachedMsg->addPar("clientId") = request->getClientId();
+        cachedMsg->addPar("resourceId") = request->getResourceId();
+        cachedMsg->addPar("fromPage") = request->getFromPage();
+        cachedMsg->addPar("arrivalGate") = request->getArrivalGate()->getIndex();
+        cachedMsg->addPar("content") = cachedResponse.c_str();
+        
+        scheduleAt(simTime() + cacheDelay, cachedMsg);
+        delete request;
+        return;
+    }
+    
+    // Cache miss - generate normal processing delay (100-200ms)
+    EV << "Cache MISS for page '" << pageName << "' - processing normally" << endl;
+    emit(cacheMissSignal, 1);
     double delay = delayDistribution(rng);
     emit(processingTimeSignal, delay);
     
@@ -220,6 +318,9 @@ void HttpServer::processDelayedRequest(cMessage *delayedMsg)
         if (fromPage >= 0) {  // Valid fromPage
             updatePatternTable(clientId, fromPageName, currentPageName);
         }
+        
+        // Trigger predictive pre-caching after serving the response
+        predictivePreCache(currentPageName);
         
         EV << "Sent HttpResponse for page '" << pageInfo->pageName 
            << "' (size: " << pageInfo->contentSize << " bytes) "
@@ -439,5 +540,65 @@ void HttpServer::printPatternStatistics()
     // Record most frequent transition
     if (!sortedPatterns.empty()) {
         recordScalar("maxTransitionCount", sortedPatterns[0].first);
+    }
+}
+
+bool HttpServer::checkResponseCache(const std::string& page, std::string& cachedResponse)
+{
+    auto cacheIt = responseCache.find(page);
+    if (cacheIt != responseCache.end()) {
+        if (!cacheIt->second.isExpired()) {
+            // Cache hit
+            cachedResponse = cacheIt->second.getContent();
+            cacheIt->second.updateAccess();
+            return true;
+        } else {
+            // Cache expired, remove entry
+            responseCache.erase(cacheIt);
+        }
+    }
+    return false;
+}
+
+void HttpServer::predictivePreCache(const std::string& currentPage)
+{
+    // Find all transitions from current page
+    for (const auto& pattern : patternTable) {
+        const std::string& fromPage = pattern.first.first;
+        const std::string& toPage = pattern.first.second;
+        
+        if (fromPage == currentPage) {
+            double probability = calculateTransitionProbability(fromPage, toPage);
+            
+            if (probability > predictionThreshold) {
+                // Check if already cached and not expired
+                auto cacheIt = responseCache.find(toPage);
+                bool needsPreCache = true;
+                
+                if (cacheIt != responseCache.end()) {
+                    if (!cacheIt->second.isExpired()) {
+                        needsPreCache = false; // Already cached and fresh
+                    } else {
+                        responseCache.erase(cacheIt); // Remove expired entry
+                    }
+                }
+                
+                if (needsPreCache) {
+                    // Pre-generate response for likely next page
+                    std::string responseContent = generatePageContent(toPage);
+                    
+                    // Create cache entry with 5 second TTL
+                    // We'll use -1 as resourceId since we're indexing by page name
+                    CacheEntry cacheEntry(-1, responseContent, 5);
+                    cacheEntry.setTimestamp(simTime());
+                    responseCache[toPage] = cacheEntry;
+                    
+                    EV << "Pre-cached response for page '" << toPage 
+                       << "' (probability: " << std::fixed << std::setprecision(3) 
+                       << probability << ")" << endl;
+                    emit(cachePreGeneratedSignal, 1);
+                }
+            }
+        }
     }
 }
