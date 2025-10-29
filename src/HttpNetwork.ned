@@ -10,7 +10,7 @@ import ned.DatarateChannel;
 network HttpNetwork
 {
     parameters:
-        @display("bgb=800,600;bgg=100,1,grey95");
+        @display("bgb=800,600;bgg=100,1,grey95;bgi=background/terrain,s");
         int numClients = default(10);
         
     types:
@@ -18,16 +18,16 @@ network HttpNetwork
         {
             datarate = 100Mbps;
             delay = 10ms;
-            @display("ls=blue,2");
+            @display("ls=blue,3");
         }
         
     submodules:
         server: HttpServer {
-            @display("p=400,100;i=device/server,gold");
+            @display("p=400,100;i=device/server,gold;t=HTTP Server\nPredictive Cache");
         }
         
         client[numClients]: HttpClient {
-            @display("p=100+i*60,300;i=device/laptop");
+            @display("p=100+i*60,300;i=device/laptop,blue;t=Client $i");
         }
         
     connections:

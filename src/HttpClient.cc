@@ -67,6 +67,7 @@ protected:
     virtual int getRandomPage();
     virtual void sendHttpRequest(int pageId);
     virtual void handleHttpResponse(HttpResponse *response);
+    virtual std::string getPageName(int pageId);
 };
 
 Define_Module(HttpClient);
@@ -97,6 +98,10 @@ void HttpClient::initialize()
     responseTimeSignal = registerSignal("responseTime");
     patternFollowedSignal = registerSignal("patternFollowed");
     randomChoiceSignal = registerSignal("randomChoice");
+    
+    // Set initial client display
+    getDisplayString().setTagArg("i", 1, "blue");
+    getDisplayString().setTagArg("t", 0, ("Client " + std::to_string(clientId) + "\nReady").c_str());
     
     // Schedule first request after a small random delay
     nextRequestTimer = new cMessage("nextRequest");
@@ -148,6 +153,11 @@ int HttpClient::getNextPatternPage()
     int nextPage = predictablePattern[currentPatternStep];
     currentPatternStep = (currentPatternStep + 1) % predictablePattern.size();
     
+    // Visual feedback for pattern following
+    getDisplayString().setTagArg("i", 1, "blue");
+    std::string bubbleText = "Following Pattern\nNext: " + getPageName(nextPage);
+    bubble(bubbleText.c_str());
+    
     EV << "Client " << clientId << " following pattern: page " << nextPage << endl;
     return nextPage;
 }
@@ -156,6 +166,11 @@ int HttpClient::getRandomPage()
 {
     // Select any page randomly
     int randomPage = randomPageChoice(rng);
+    
+    // Visual feedback for random selection
+    getDisplayString().setTagArg("i", 1, "orange");
+    std::string bubbleText = "Random Choice\nNext: " + getPageName(randomPage);
+    bubble(bubbleText.c_str());
     
     EV << "Client " << clientId << " random selection: page " << randomPage << endl;
     return randomPage;
@@ -180,6 +195,11 @@ void HttpClient::sendHttpRequest(int pageId)
     // Send request to server
     send(request, "out");
     
+    // Visual feedback for sending request
+    getDisplayString().setTagArg("i", 1, "yellow");
+    std::string bubbleText = "Sending Request\n" + getPageName(pageId);
+    bubble(bubbleText.c_str());
+    
     emit(requestSentSignal, requestsSent);
     
     EV << "Client " << clientId << " sent request " << requestCounter 
@@ -199,6 +219,17 @@ void HttpClient::handleHttpResponse(HttpResponse *response)
         simtime_t responseTime = simTime() - it->second;
         emit(responseTimeSignal, responseTime.dbl());
         pendingRequests.erase(it);
+        
+        // Visual feedback for response received
+        if (responseTime < 0.05) { // Fast response (likely cache hit)
+            getDisplayString().setTagArg("i", 1, "green");
+            std::string bubbleText = "Fast Response!\n" + getPageName(pageId) + "\n" + std::to_string((int)(responseTime.dbl()*1000)) + "ms";
+            bubble(bubbleText.c_str());
+        } else { // Normal response
+            getDisplayString().setTagArg("i", 1, "blue");
+            std::string bubbleText = "Response Received\n" + getPageName(pageId) + "\n" + std::to_string((int)(responseTime.dbl()*1000)) + "ms";
+            bubble(bubbleText.c_str());
+        }
         
         EV << "Client " << clientId << " received response for request " << requestId 
            << " (page " << pageId << ") - Response time: " << responseTime << "s" << endl;
@@ -250,4 +281,17 @@ void HttpClient::finish()
     
     // Clean up
     cancelAndDelete(nextRequestTimer);
+}
+
+std::string HttpClient::getPageName(int pageId)
+{
+    switch(pageId) {
+        case HOME: return "home";
+        case LOGIN: return "login";
+        case DASHBOARD: return "dashboard";
+        case PROFILE: return "profile";
+        case SETTINGS: return "settings";
+        case LOGOUT: return "logout";
+        default: return "unknown";
+    }
 }

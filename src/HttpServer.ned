@@ -8,7 +8,7 @@ package http_predictive_cache;
 simple HttpServer
 {
     parameters:
-        @display("i=device/server2");
+        @display("i=device/server2,gold;t=HTTP Server");
         
         // Configurable parameters for predictive caching
         double predictionThreshold = default(0.6);  // Probability threshold for pre-caching (0.0-1.0)

@@ -151,6 +151,10 @@ void HttpServer::initialize()
     // Initialize web pages
     initializeWebPages();
     
+    // Set initial server display
+    getDisplayString().setTagArg("i", 1, "gold");
+    getDisplayString().setTagArg("t", 0, "HTTP Server\nPredictive Cache\nReady");
+    
     // Register signals for statistics
     requestReceivedSignal = registerSignal("requestReceived");
     responseGeneratedSignal = registerSignal("responseGenerated");
@@ -245,6 +249,10 @@ void HttpServer::handleMessage(cMessage *msg)
             std::string pageName = msg->getName() + 12;  // Extract page name after "CacheExpiry_"
             handleCacheExpiry(pageName);
             delete msg;
+        } else if (strcmp(msg->getName(), "ColorReset") == 0) {
+            // Reset server icon color to default
+            getDisplayString().setTagArg("i", 1, "gold");
+            delete msg;
         } else {
             // This is a delayed processing message
             processDelayedRequest(msg);
@@ -308,6 +316,15 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
         
         EV << "Cache HIT for page '" << pageName << "' - serving with " << cacheDelay << "s delay" << endl;
         
+            // Visual feedback for cache hit
+        getDisplayString().setTagArg("i", 1, "green");
+        std::string bubbleText = "CACHE HIT!\n" + pageName;
+        bubble(bubbleText.c_str());
+        
+        // Schedule color reset
+        cMessage* resetMsg = new cMessage("ColorReset");
+        scheduleAt(simTime() + 1.0, resetMsg);
+        
         // Update cache hit metrics
         totalCacheHits++;
         emit(cacheHitSignal, 1);
@@ -348,6 +365,15 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
     // Cache miss - generate normal processing delay (100-200ms)
     EV << "Cache MISS for page '" << pageName << "' - processing normally" << endl;
     
+    // Visual feedback for cache miss
+    getDisplayString().setTagArg("i", 1, "red");
+    std::string bubbleText = "CACHE MISS\n" + pageName;
+    bubble(bubbleText.c_str());
+    
+    // Schedule color reset
+    cMessage* resetMsg = new cMessage("ColorReset");
+    scheduleAt(simTime() + 1.0, resetMsg);
+    
     // Update cache miss metrics
     totalCacheMisses++;
     emit(cacheMissSignal, 1);
@@ -356,6 +382,11 @@ void HttpServer::handleHttpRequest(HttpRequest *request)
     double hitRate = (totalCacheHits + totalCacheMisses > 0) ? 
                      (double)totalCacheHits / (totalCacheHits + totalCacheMisses) * 100.0 : 0.0;
     emit(cacheHitRateSignal, hitRate);
+    
+    // Update display with current statistics
+    std::string statusText = "HTTP Server\\nCache: " + std::to_string(currentCacheSize) + "/" + std::to_string(maxCacheSize) +
+                            "\\nHit Rate: " + std::to_string((int)hitRate) + "%";
+    getDisplayString().setTagArg("t", 0, statusText.c_str());
     
     double delay = delayDistribution(rng);
     emit(processingTimeSignal, delay);
@@ -603,6 +634,15 @@ void HttpServer::updatePatternTable(int clientId, const std::string& fromPage, c
     // Update pattern table
     patternTable[transition]++;
     
+    // Visual feedback for pattern learning
+    getDisplayString().setTagArg("i", 1, "yellow");
+    std::string bubbleText = "PATTERN LEARNED\n" + fromPage + " → " + toPage + "\nCount: " + std::to_string(patternTable[transition]);
+    bubble(bubbleText.c_str());
+    
+    // Schedule color reset
+    cMessage* resetMsg = new cMessage("ColorReset");
+    scheduleAt(simTime() + 1.5, resetMsg);
+    
     // Emit pattern learning signal
     emit(patternLearnedSignal, patternTable[transition]);
     
@@ -774,6 +814,16 @@ void HttpServer::predictivePreCache(const std::string& currentPage)
                         EV << "Pre-cached response for page '" << toPage 
                            << "' (probability: " << std::fixed << std::setprecision(3) 
                            << probability << ", TTL: " << cacheTTL << "s)" << endl;
+                        
+                        // Visual feedback for predictive caching
+                        getDisplayString().setTagArg("i", 1, "cyan");
+                        std::string bubbleText = "PREDICTIVE CACHE\n" + toPage + "\nP=" + std::to_string((int)(probability*100)) + "%";
+                        bubble(bubbleText.c_str());
+                        
+                        // Schedule color reset
+                        cMessage* resetMsg = new cMessage("ColorReset");
+                        scheduleAt(simTime() + 2.0, resetMsg);
+                        
                         emit(cachePreGeneratedSignal, 1);
                         
                         // Schedule expiry for this cache entry

@@ -8,7 +8,7 @@ package http_predictive_cache;
 simple HttpClient
 {
     parameters:
-        @display("i=device/pc2");
+        @display("i=device/pc2,blue;t=HTTP Client");
         
         // Statistics collection
         @signal[requestSent](type="long");

@@ -1,9 +1,9 @@
-file 9808 1761412612                                            
+                                                                
 version 3
-run General-0-20251025-23:16:42-15020
+run General-0-20251030-01:58:14-23488
 attr configname General
-attr datetime 20251025-23:16:42
-attr datetimef 20251025-231642
+attr datetime 20251030-01:58:14
+attr datetimef 20251030-015814
 attr experiment General
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -11,7 +11,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network HttpNetwork
-attr processid 15020
+attr processid 23488
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -247,45 +247,4 @@ vector 53 HttpNetwork.client[7] randomSelections:vector ETV
 attr recordingmode vector
 attr source randomChoice
 attr title "Random Selections"
-vector 54 HttpNetwork.client[8] requestsSent:vector ETV
-attr recordingmode vector
-attr source requestSent
-attr title "Requests Sent"
-vector 55 HttpNetwork.client[8] responsesReceived:vector ETV
-attr recordingmode vector
-attr source responseReceived
-attr title "Responses Received"
-vector 56 HttpNetwork.client[8] responseTime:vector ETV
-attr recordingmode vector
-attr source responseTime
-attr title "Response Time"
-attr unit s
-vector 57 HttpNetwork.client[8] patternUsage:vector ETV
-attr recordingmode vector
-attr source patternFollowed
-attr title "Pattern Followed"
-vector 58 HttpNetwork.client[8] randomSelections:vector ETV
-attr recordingmode vector
-attr source randomChoice
-attr title "Random Selections"
-vector 59 HttpNetwork.client[9] requestsSent:vector ETV
-attr recordingmode vector
-attr source requestSent
-attr title "Requests Sent"
-vector 60 HttpNetwork.client[9] responsesReceived:vector ETV
-attr recordingmode vector
-attr source responseReceived
-attr title "Responses Received"
-vector 61 HttpNetwork.client[9] responseTime:vector ETV
-attr recordingmode vector
-attr source responseTime
-attr title "Response Time"
-attr unit s
-vector 62 HttpNetwork.client[9] patternUsage:vector ETV
-attr recordingmode vector
-attr source patternFollowed
-attr title "Pattern Followed"
-vector 63 HttpNetwork.client[9] randomSelections:vector ETV
-attr recordingmode vector
-attr source randomChoice
-attr title "Random Selections"
+vector 54 HttpNetwork.clien
