@@ -155,7 +155,7 @@ int HttpClient::getNextPatternPage()
     
     // Visual feedback for pattern following
     getDisplayString().setTagArg("i", 1, "blue");
-    std::string bubbleText = "Following Pattern\nNext: " + getPageName(nextPage);
+    std::string bubbleText = "Pattern \n" + getPageName(nextPage);
     bubble(bubbleText.c_str());
     
     EV << "Client " << clientId << " following pattern: page " << nextPage << endl;
@@ -169,7 +169,7 @@ int HttpClient::getRandomPage()
     
     // Visual feedback for random selection
     getDisplayString().setTagArg("i", 1, "orange");
-    std::string bubbleText = "Random Choice\nNext: " + getPageName(randomPage);
+    std::string bubbleText = "Random \n" + getPageName(randomPage);
     bubble(bubbleText.c_str());
     
     EV << "Client " << clientId << " random selection: page " << randomPage << endl;
@@ -197,7 +197,7 @@ void HttpClient::sendHttpRequest(int pageId)
     
     // Visual feedback for sending request
     getDisplayString().setTagArg("i", 1, "yellow");
-    std::string bubbleText = "Sending Request\n" + getPageName(pageId);
+    std::string bubbleText = "Request \n" + getPageName(pageId);
     bubble(bubbleText.c_str());
     
     emit(requestSentSignal, requestsSent);
@@ -223,11 +223,11 @@ void HttpClient::handleHttpResponse(HttpResponse *response)
         // Visual feedback for response received
         if (responseTime < 0.05) { // Fast response (likely cache hit)
             getDisplayString().setTagArg("i", 1, "green");
-            std::string bubbleText = "Fast Response!\n" + getPageName(pageId) + "\n" + std::to_string((int)(responseTime.dbl()*1000)) + "ms";
+            std::string bubbleText = "Fast \n" + getPageName(pageId) + " " + std::to_string((int)(responseTime.dbl()*1000)) + "ms";
             bubble(bubbleText.c_str());
         } else { // Normal response
             getDisplayString().setTagArg("i", 1, "blue");
-            std::string bubbleText = "Response Received\n" + getPageName(pageId) + "\n" + std::to_string((int)(responseTime.dbl()*1000)) + "ms";
+            std::string bubbleText = "Response \n" + getPageName(pageId) + " " + std::to_string((int)(responseTime.dbl()*1000)) + "ms";
             bubble(bubbleText.c_str());
         }
         

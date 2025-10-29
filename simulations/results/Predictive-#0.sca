@@ -1,8 +1,8 @@
 version 3
-run Predictive-0-20251030-02:05:03-17240
+run Predictive-0-20251030-02:42:05-10680
 attr configname Predictive
-attr datetime 20251030-02:05:03
-attr datetimef 20251030-020503
+attr datetime 20251030-02:42:05
+attr datetimef 20251030-024205
 attr experiment Predictive
 attr inifile omnetpp.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network http_predictive_cache.HttpNetwork
-attr processid 17240
+attr processid 10680
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -294,8 +294,8 @@ par HttpNetwork.server predictionThreshold 0.6
 par HttpNetwork.server cacheTTL 5s
 attr unit s
 par HttpNetwork.server maxCacheSize 20
-scalar HttpNetwork.server requestsReceived 99
-scalar HttpNetwork.server responsesGenerated 99
+scalar HttpNetwork.server requestsReceived 124
+scalar HttpNetwork.server responsesGenerated 124
 scalar HttpNetwork.server processingEfficiency 1
 scalar HttpNetwork.server webPagesCount 6
 scalar HttpNetwork.server page_home_size 443
@@ -306,24 +306,24 @@ scalar HttpNetwork.server page_settings_size 376
 scalar HttpNetwork.server page_logout_size 366
 scalar HttpNetwork.server totalPatterns 20
 scalar HttpNetwork.server activeClients 10
-scalar HttpNetwork.server maxTransitionCount 21
+scalar HttpNetwork.server maxTransitionCount 27
 scalar HttpNetwork.server maxCacheSize 20
-scalar HttpNetwork.server finalCacheSize 2
-scalar HttpNetwork.server cacheUtilization 0.1
-scalar HttpNetwork.server totalCacheHits 59
-scalar HttpNetwork.server totalCacheMisses 40
-scalar HttpNetwork.server totalRequests 99
-scalar HttpNetwork.server finalCacheHitRate 59.59595959596
-scalar HttpNetwork.server totalTimeSaved 7.9894013533451
-scalar HttpNetwork.server averageTimeSaved 0.13541358226009
+scalar HttpNetwork.server finalCacheSize 3
+scalar HttpNetwork.server cacheUtilization 0.15
+scalar HttpNetwork.server totalCacheHits 79
+scalar HttpNetwork.server totalCacheMisses 45
+scalar HttpNetwork.server totalRequests 124
+scalar HttpNetwork.server finalCacheHitRate 63.709677419355
+scalar HttpNetwork.server totalTimeSaved 10.702946516621
+scalar HttpNetwork.server averageTimeSaved 0.13548033565343
 scalar HttpNetwork.server configPredictionThreshold 0.6
 scalar HttpNetwork.server configCacheTTL 5
 scalar HttpNetwork.server configMaxCacheSize 20
-scalar HttpNetwork.server requestsCompleted:count 80
+scalar HttpNetwork.server requestsCompleted:count 104
 attr recordingmode count
 attr source requestComplete
 attr title "Completed Requests, count"
-scalar HttpNetwork.server timeSavingsStats:mean 0.13541358226009
+scalar HttpNetwork.server timeSavingsStats:mean 0.13548033565343
 attr recordingmode mean
 attr source timeSavings
 attr title "Time Savings from Cache, mean"
@@ -333,22 +333,22 @@ attr recordingmode max
 attr source timeSavings
 attr title "Time Savings from Cache, max"
 attr unit s
-scalar HttpNetwork.server timeSavingsStats:sum 7.9894013533451
+scalar HttpNetwork.server timeSavingsStats:sum 10.702946516621
 attr recordingmode sum
 attr source timeSavings
 attr title "Time Savings from Cache, sum"
 attr unit s
-scalar HttpNetwork.server cacheHitRateStats:last 59.59595959596
+scalar HttpNetwork.server cacheHitRateStats:last 63.709677419355
 attr recordingmode last
 attr source cacheHitRate
 attr title "Cache Hit Rate, last"
 attr unit %
-scalar HttpNetwork.server cacheHitRateStats:mean 35.161245803824
+scalar HttpNetwork.server cacheHitRateStats:mean 40.21692819873
 attr recordingmode mean
 attr source cacheHitRate
 attr title "Cache Hit Rate, mean"
 attr unit %
-scalar HttpNetwork.server responseTimeStats:mean 0.032778455465662
+scalar HttpNetwork.server responseTimeStats:mean 0.031693827891654
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time per Request, mean"
@@ -364,13 +364,13 @@ attr source responseTime
 attr title "Response Time per Request, min"
 attr unit s
 statistic HttpNetwork.server responseTimeStats:histogram
-field count 80
-field mean 0.032778455465662
-field stddev 0.042878292209476
+field count 104
+field mean 0.031693827891654
+field stddev 0.041390784171287
 field min 0.00153053639
 field max 0.199802215568
-field sum 2.622276437253
-field sqrsum 0.23119945889845
+field sum 3.296158100732
+field sqrsum 0.28092716002263
 attr recordingmode histogram
 attr source responseTime
 attr title "Response Time per Request"
@@ -378,9 +378,9 @@ attr unit s
 bin	-inf	0
 bin	0	1
 bin	0.005	1
-bin	0.01	34
-bin	0.015	26
-bin	0.02	0
+bin	0.01	47
+bin	0.015	33
+bin	0.02	1
 bin	0.025	2
 bin	0.03	1
 bin	0.035	0
@@ -398,11 +398,11 @@ bin	0.09	1
 bin	0.095	0
 bin	0.1	0
 bin	0.105	3
-bin	0.11	0
+bin	0.11	1
 bin	0.115	1
-bin	0.12	0
+bin	0.12	1
 bin	0.125	0
-bin	0.13	0
+bin	0.13	1
 bin	0.135	0
 bin	0.14	1
 bin	0.145	0
@@ -439,27 +439,27 @@ scalar HttpNetwork.server cacheEvicted:count 0
 attr recordingmode count
 attr source cacheEvicted
 attr title "Cache Entries Evicted, count"
-scalar HttpNetwork.server cacheExpired:count 5
+scalar HttpNetwork.server cacheExpired:count 6
 attr recordingmode count
 attr source cacheExpired
 attr title "Cache Entries Expired, count"
-scalar HttpNetwork.server predictiveCaching:count 7
+scalar HttpNetwork.server predictiveCaching:count 9
 attr recordingmode count
 attr source cachePreGenerated
 attr title "Pages Pre-cached, count"
-scalar HttpNetwork.server cacheMisses:count 40
+scalar HttpNetwork.server cacheMisses:count 45
 attr recordingmode count
 attr source cacheMiss
 attr title "Cache Misses, count"
-scalar HttpNetwork.server cacheHits:count 59
+scalar HttpNetwork.server cacheHits:count 79
 attr recordingmode count
 attr source cacheHit
 attr title "Cache Hits, count"
-scalar HttpNetwork.server patternsLearned:count 86
+scalar HttpNetwork.server patternsLearned:count 109
 attr recordingmode count
 attr source patternLearned
 attr title "Navigation Patterns Learned, count"
-scalar HttpNetwork.server processingDelay:mean 0.066707616351966
+scalar HttpNetwork.server processingDelay:mean 0.060977920929676
 attr recordingmode mean
 attr source processingTime
 attr title "Processing Delay, mean"
@@ -474,17 +474,17 @@ attr recordingmode min
 attr source processingTime
 attr title "Processing Delay, min"
 attr unit s
-scalar HttpNetwork.server responsesGenerated:count 99
+scalar HttpNetwork.server responsesGenerated:count 124
 attr recordingmode count
 attr source responseGenerated
 attr title "Responses Generated, count"
-scalar HttpNetwork.server requestsReceived:count 99
+scalar HttpNetwork.server requestsReceived:count 124
 attr recordingmode count
 attr source requestReceived
 attr title "Requests Received, count"
 par HttpNetwork.client[0] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[0] requestsSent 10
-scalar HttpNetwork.client[0] responsesReceived 10
+scalar HttpNetwork.client[0] requestsSent 13
+scalar HttpNetwork.client[0] responsesReceived 13
 scalar HttpNetwork.client[0] responseRate 1
 scalar HttpNetwork.client[0] avgResponseTime 0.15
 scalar HttpNetwork.client[0] patternFollowed 0
@@ -493,19 +493,19 @@ scalar HttpNetwork.client[0] randomSelections:count 4
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[0] patternUsage:count 6
+scalar HttpNetwork.client[0] patternUsage:count 9
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[0] responsesReceived:count 10
+scalar HttpNetwork.client[0] responsesReceived:count 13
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[0] requestsSent:count 10
+scalar HttpNetwork.client[0] requestsSent:count 13
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[0] responseTime:mean 0.0983908499053
+scalar HttpNetwork.client[0] responseTime:mean 0.091830317688615
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -515,14 +515,14 @@ attr recordingmode max
 attr source responseTime
 attr title "Response Time, max"
 attr unit s
-scalar HttpNetwork.client[0] responseTime:min 0.033476637186
+scalar HttpNetwork.client[0] responseTime:min 0.030468160788
 attr recordingmode min
 attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[1] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[1] requestsSent 9
-scalar HttpNetwork.client[1] responsesReceived 9
+scalar HttpNetwork.client[1] requestsSent 12
+scalar HttpNetwork.client[1] responsesReceived 12
 scalar HttpNetwork.client[1] responseRate 1
 scalar HttpNetwork.client[1] avgResponseTime 0.15
 scalar HttpNetwork.client[1] patternFollowed 0
@@ -531,19 +531,19 @@ scalar HttpNetwork.client[1] randomSelections:count 2
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[1] patternUsage:count 7
+scalar HttpNetwork.client[1] patternUsage:count 10
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[1] responsesReceived:count 9
+scalar HttpNetwork.client[1] responsesReceived:count 12
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[1] requestsSent:count 9
+scalar HttpNetwork.client[1] requestsSent:count 12
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[1] responseTime:mean 0.089203547137222
+scalar HttpNetwork.client[1] responseTime:mean 0.075040125295083
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -553,14 +553,14 @@ attr recordingmode max
 attr source responseTime
 attr title "Response Time, max"
 attr unit s
-scalar HttpNetwork.client[1] responseTime:min 0.031958748308
+scalar HttpNetwork.client[1] responseTime:min 0.031206862766
 attr recordingmode min
 attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[2] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[2] requestsSent 10
-scalar HttpNetwork.client[2] responsesReceived 10
+scalar HttpNetwork.client[2] requestsSent 12
+scalar HttpNetwork.client[2] responsesReceived 12
 scalar HttpNetwork.client[2] responseRate 1
 scalar HttpNetwork.client[2] avgResponseTime 0.15
 scalar HttpNetwork.client[2] patternFollowed 0
@@ -569,19 +569,19 @@ scalar HttpNetwork.client[2] randomSelections:count 2
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[2] patternUsage:count 8
+scalar HttpNetwork.client[2] patternUsage:count 10
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[2] responsesReceived:count 10
+scalar HttpNetwork.client[2] responsesReceived:count 12
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[2] requestsSent:count 10
+scalar HttpNetwork.client[2] requestsSent:count 12
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[2] responseTime:mean 0.0952737689268
+scalar HttpNetwork.client[2] responseTime:mean 0.099515959514583
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -597,13 +597,13 @@ attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[3] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[3] requestsSent 10
-scalar HttpNetwork.client[3] responsesReceived 10
+scalar HttpNetwork.client[3] requestsSent 12
+scalar HttpNetwork.client[3] responsesReceived 12
 scalar HttpNetwork.client[3] responseRate 1
 scalar HttpNetwork.client[3] avgResponseTime 0.15
 scalar HttpNetwork.client[3] patternFollowed 0
 scalar HttpNetwork.client[3] randomChoices 0
-scalar HttpNetwork.client[3] randomSelections:count 1
+scalar HttpNetwork.client[3] randomSelections:count 3
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
@@ -611,15 +611,15 @@ scalar HttpNetwork.client[3] patternUsage:count 9
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[3] responsesReceived:count 10
+scalar HttpNetwork.client[3] responsesReceived:count 12
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[3] requestsSent:count 10
+scalar HttpNetwork.client[3] requestsSent:count 12
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[3] responseTime:mean 0.1062947192658
+scalar HttpNetwork.client[3] responseTime:mean 0.10328016201658
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -635,29 +635,29 @@ attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[4] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[4] requestsSent 10
-scalar HttpNetwork.client[4] responsesReceived 10
+scalar HttpNetwork.client[4] requestsSent 13
+scalar HttpNetwork.client[4] responsesReceived 13
 scalar HttpNetwork.client[4] responseRate 1
 scalar HttpNetwork.client[4] avgResponseTime 0.15
 scalar HttpNetwork.client[4] patternFollowed 0
 scalar HttpNetwork.client[4] randomChoices 0
-scalar HttpNetwork.client[4] randomSelections:count 4
+scalar HttpNetwork.client[4] randomSelections:count 5
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[4] patternUsage:count 6
+scalar HttpNetwork.client[4] patternUsage:count 8
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[4] responsesReceived:count 10
+scalar HttpNetwork.client[4] responsesReceived:count 13
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[4] requestsSent:count 10
+scalar HttpNetwork.client[4] requestsSent:count 13
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[4] responseTime:mean 0.0920837444201
+scalar HttpNetwork.client[4] responseTime:mean 0.087279942743692
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -667,19 +667,19 @@ attr recordingmode max
 attr source responseTime
 attr title "Response Time, max"
 attr unit s
-scalar HttpNetwork.client[4] responseTime:min 0.031803106513
+scalar HttpNetwork.client[4] responseTime:min 0.030826128961
 attr recordingmode min
 attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[5] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[5] requestsSent 10
-scalar HttpNetwork.client[5] responsesReceived 9
-scalar HttpNetwork.client[5] responseRate 0.9
+scalar HttpNetwork.client[5] requestsSent 13
+scalar HttpNetwork.client[5] responsesReceived 13
+scalar HttpNetwork.client[5] responseRate 1
 scalar HttpNetwork.client[5] avgResponseTime 0.15
 scalar HttpNetwork.client[5] patternFollowed 0
 scalar HttpNetwork.client[5] randomChoices 0
-scalar HttpNetwork.client[5] randomSelections:count 1
+scalar HttpNetwork.client[5] randomSelections:count 4
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
@@ -687,15 +687,15 @@ scalar HttpNetwork.client[5] patternUsage:count 9
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[5] responsesReceived:count 9
+scalar HttpNetwork.client[5] responsesReceived:count 13
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[5] requestsSent:count 10
+scalar HttpNetwork.client[5] requestsSent:count 13
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[5] responseTime:mean 0.093773921043667
+scalar HttpNetwork.client[5] responseTime:mean 0.082741557615692
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -705,14 +705,14 @@ attr recordingmode max
 attr source responseTime
 attr title "Response Time, max"
 attr unit s
-scalar HttpNetwork.client[5] responseTime:min 0.032805354076
+scalar HttpNetwork.client[5] responseTime:min 0.030987800347
 attr recordingmode min
 attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[6] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[6] requestsSent 9
-scalar HttpNetwork.client[6] responsesReceived 9
+scalar HttpNetwork.client[6] requestsSent 12
+scalar HttpNetwork.client[6] responsesReceived 12
 scalar HttpNetwork.client[6] responseRate 1
 scalar HttpNetwork.client[6] avgResponseTime 0.15
 scalar HttpNetwork.client[6] patternFollowed 0
@@ -721,19 +721,19 @@ scalar HttpNetwork.client[6] randomSelections:count 0
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[6] patternUsage:count 9
+scalar HttpNetwork.client[6] patternUsage:count 12
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[6] responsesReceived:count 9
+scalar HttpNetwork.client[6] responsesReceived:count 12
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[6] requestsSent:count 9
+scalar HttpNetwork.client[6] requestsSent:count 12
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[6] responseTime:mean 0.071357569087
+scalar HttpNetwork.client[6] responseTime:mean 0.070384441103
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -749,8 +749,8 @@ attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[7] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[7] requestsSent 11
-scalar HttpNetwork.client[7] responsesReceived 11
+scalar HttpNetwork.client[7] requestsSent 13
+scalar HttpNetwork.client[7] responsesReceived 13
 scalar HttpNetwork.client[7] responseRate 1
 scalar HttpNetwork.client[7] avgResponseTime 0.15
 scalar HttpNetwork.client[7] patternFollowed 0
@@ -759,19 +759,19 @@ scalar HttpNetwork.client[7] randomSelections:count 4
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[7] patternUsage:count 7
+scalar HttpNetwork.client[7] patternUsage:count 9
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[7] responsesReceived:count 11
+scalar HttpNetwork.client[7] responsesReceived:count 13
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[7] requestsSent:count 11
+scalar HttpNetwork.client[7] requestsSent:count 13
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[7] responseTime:mean 0.068605179599455
+scalar HttpNetwork.client[7] responseTime:mean 0.063828754039385
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -787,29 +787,29 @@ attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[8] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[8] requestsSent 10
-scalar HttpNetwork.client[8] responsesReceived 10
+scalar HttpNetwork.client[8] requestsSent 12
+scalar HttpNetwork.client[8] responsesReceived 12
 scalar HttpNetwork.client[8] responseRate 1
 scalar HttpNetwork.client[8] avgResponseTime 0.15
 scalar HttpNetwork.client[8] patternFollowed 0
 scalar HttpNetwork.client[8] randomChoices 0
-scalar HttpNetwork.client[8] randomSelections:count 4
+scalar HttpNetwork.client[8] randomSelections:count 5
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[8] patternUsage:count 6
+scalar HttpNetwork.client[8] patternUsage:count 7
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[8] responsesReceived:count 10
+scalar HttpNetwork.client[8] responsesReceived:count 12
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[8] requestsSent:count 10
+scalar HttpNetwork.client[8] requestsSent:count 12
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[8] responseTime:mean 0.0773423453792
+scalar HttpNetwork.client[8] responseTime:mean 0.07046493718625
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
@@ -825,8 +825,8 @@ attr source responseTime
 attr title "Response Time, min"
 attr unit s
 par HttpNetwork.client[9] typename "\"http_predictive_cache.HttpClient\""
-scalar HttpNetwork.client[9] requestsSent 10
-scalar HttpNetwork.client[9] responsesReceived 10
+scalar HttpNetwork.client[9] requestsSent 12
+scalar HttpNetwork.client[9] responsesReceived 12
 scalar HttpNetwork.client[9] responseRate 1
 scalar HttpNetwork.client[9] avgResponseTime 0.15
 scalar HttpNetwork.client[9] patternFollowed 0
@@ -835,19 +835,19 @@ scalar HttpNetwork.client[9] randomSelections:count 0
 attr recordingmode count
 attr source randomChoice
 attr title "Random Selections, count"
-scalar HttpNetwork.client[9] patternUsage:count 10
+scalar HttpNetwork.client[9] patternUsage:count 12
 attr recordingmode count
 attr source patternFollowed
 attr title "Pattern Followed, count"
-scalar HttpNetwork.client[9] responsesReceived:count 10
+scalar HttpNetwork.client[9] responsesReceived:count 12
 attr recordingmode count
 attr source responseReceived
 attr title "Responses Received, count"
-scalar HttpNetwork.client[9] requestsSent:count 10
+scalar HttpNetwork.client[9] requestsSent:count 12
 attr recordingmode count
 attr source requestSent
 attr title "Requests Sent, count"
-scalar HttpNetwork.client[9] responseTime:mean 0.0714180239377
+scalar HttpNetwork.client[9] responseTime:mean 0.06526560472975
 attr recordingmode mean
 attr source responseTime
 attr title "Response Time, mean"
