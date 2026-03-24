@@ -19,10 +19,7 @@ An OMNeT++ simulation project that models HTTP browsing behavior and evaluates *
 ### Implemented algorithms
 1. **Transition-based next-page prediction (Markov-style first-order model)**
    - Learns transition counts `(fromPage, toPage)`.
-   - Computes transition probability:
-     \[
-     P(to \mid from) = \frac{count(from \rightarrow to)}{\sum_{x} count(from \rightarrow x)}
-     \]
+   - Computes transition probability: `P(to|from) = count(from->to) / sum_x count(from->x)`.
    - Uses `predictionThreshold` to decide whether to pre-cache predicted pages.
 
 2. **Predictive pre-caching**
@@ -93,6 +90,9 @@ make cleanall
 
 ### Run examples
 ```bash
+# Using the provided helper script (runs ../src/HttpPredictiveCache)
+./simulations/run -u Cmdenv -c Baseline simulations/omnetpp.ini
+
 # Baseline (prediction effectively disabled)
 omnetpp -u Cmdenv -c Baseline simulations/omnetpp.ini
 
@@ -152,4 +152,3 @@ Client-side statistics include:
 - **Baseline**: near-zero predictive benefit (threshold > 1), higher average latency.
 - **Predictive**: improved cache hit rate and lower response times for recurrent navigation patterns.
 - **Sweep/Aggressive/Conservative**: lets you study threshold/TTL trade-offs between cache hit ratio, freshness, and unnecessary pre-caching.
-
