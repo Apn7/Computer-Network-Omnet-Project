@@ -1,4 +1,4 @@
-# HTTP Predictive Cache Simulation (OMNeT++)
+# HTTP Request Prediction for Faster Web Response using OMNeT++
 
 An OMNeT++ simulation project that models HTTP browsing behavior and evaluates **pattern-based predictive caching** under different workloads and cache configurations.
 
